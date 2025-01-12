@@ -1,0 +1,6 @@
+clusterName: ${cluster_name}
+region: us-east-1
+vpcId: ${vpc_id}
+serviceAccount:
+  create: true
+  name: aws-load-balancer-controller
