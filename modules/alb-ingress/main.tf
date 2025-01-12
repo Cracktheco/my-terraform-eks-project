@@ -22,7 +22,3 @@ resource "helm_release" "alb_controller" {
     })
   ]
 }
-
-output "alb_controller_name" {
-  value = helm_release.alb_controller.name
-}
