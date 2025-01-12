@@ -47,7 +47,7 @@ module "vpc" {
 module "eks_cluster" {
   source      = "../../modules/eks"
   cluster_name   = "${var.environment}-eks-cluster"
-  cluster_version = "1.24"
+  cluster_version = "1.31"
   vpc_id       = module.vpc.vpc_id
   subnet_ids   = module.vpc.private_subnets
   environment  = var.environment
