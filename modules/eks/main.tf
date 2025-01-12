@@ -14,11 +14,3 @@ module "eks_cluster" {
     Environment = var.environment
   }
 }
-
-output "cluster_id" {
-  value = module.eks_cluster.cluster_id
-}
-
-output "kubeconfig" {
-  value = module.eks_cluster.kubeconfig
-}
