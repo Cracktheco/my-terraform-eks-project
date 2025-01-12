@@ -65,7 +65,3 @@ data "template_file" "user_data" {
     cert_auth    = var.cluster_certificate_authority
   }
 }
-
-output "ec2_worker_id" {
-  value = aws_instance.eks_worker.id
-}
