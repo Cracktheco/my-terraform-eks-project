@@ -73,3 +73,83 @@ module "alb_controller" {
 }
 
 # For your container (nginx) deployment, either add here or keep in separate .tf
+resource "kubernetes_deployment" "nginx" {
+  metadata {
+    name      = "nginx-deployment"
+    namespace = "default"
+  }
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "nginx"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          app = "nginx"
+        }
+      }
+      spec {
+        container {
+          image = "nginx:latest"
+          name  = "nginx"
+          port {
+            container_port = 80
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "nginx" {
+  metadata {
+    name      = "nginx-service"
+    namespace = "default"
+    labels = {
+      app = "nginx"
+    }
+  }
+  spec {
+    selector = {
+      app = "nginx"
+    }
+    port {
+      port        = 80
+      target_port = 80
+    }
+    type = "NodePort"
+  }
+}
+
+resource "kubernetes_ingress" "nginx" {
+  metadata {
+    name      = "nginx-ingress"
+    namespace = "default"
+    annotations = {
+      "kubernetes.io/ingress.class" = "alb"
+      "alb.ingress.kubernetes.io/scheme" = "internet-facing"
+    }
+  }
+  spec {
+    rule {
+      http {
+        path {
+          path     = "/"
+          path_type = "Prefix"
+          backend {
+            service {
+              name = kubernetes_service.nginx.metadata[0].name
+              port {
+                number = 80
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
